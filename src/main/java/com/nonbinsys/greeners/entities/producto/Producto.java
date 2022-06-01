@@ -5,24 +5,24 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "productos")
+@IdClass(ProductoId.class)
 public class Producto {
 
-    @EmbeddedId
-    private ProductoId productoId; //idComercio y codigo
+    @Id
+    private Long id_comercio;
+    @Id
+    private String codigo;
     private String nombre;
     private String descripcion;
 
     public Producto() {
     }
 
-    public Producto(ProductoId productoId, String nombre, String descripcion) {
-        this.productoId = productoId;
+    public Producto(Long id_comercio, String codigo, String nombre, String descripcion) {
+        this.id_comercio = id_comercio;
+        this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
-    }
-
-    public ProductoId getProductoId() {
-        return productoId;
     }
 
     @Override
@@ -30,26 +30,41 @@ public class Producto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Producto producto = (Producto) o;
-        return Objects.equals(productoId, producto.productoId) && Objects.equals(nombre, producto.nombre) && Objects.equals(descripcion, producto.descripcion);
+        return Objects.equals(id_comercio, producto.id_comercio) && Objects.equals(codigo, producto.codigo) && Objects.equals(nombre, producto.nombre) && Objects.equals(descripcion, producto.descripcion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productoId, nombre, descripcion);
+        return Objects.hash(id_comercio, codigo, nombre, descripcion);
     }
 
     @Override
     public String toString() {
         return "Producto{" +
-                "productoId=" + productoId +
+                "id_comercio='" + id_comercio + '\'' +
+                ", codigo='" + codigo + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 '}';
     }
 
     //region Getters and Setters
-    public void setProductoId(ProductoId productoId) {
-        this.productoId = productoId;
+
+
+    public Long getId_comercio() {
+        return id_comercio;
+    }
+
+    public void setId_comercio(Long id_comercio) {
+        this.id_comercio = id_comercio;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombre() {

@@ -46,26 +46,27 @@ public class ProductoController {
                 .body(entityModel);
     }
 
-    @GetMapping("/{id}")
-    public EntityModel<Producto> one(@PathVariable ProductoId id) {
-        Producto producto = repository.findById(id)
-                .orElseThrow(() -> new ProductoNotFoundException(id));
+    @GetMapping("/{id_comercio}/{codigo}")
+    public EntityModel<Producto> one(@PathVariable Long id_comercio, @PathVariable String codigo) {
+        ProductoId productoId = new ProductoId(id_comercio, codigo);
+        Producto producto = repository.findById(productoId)
+                .orElseThrow(() -> new ProductoNotFoundException(productoId));
 
         return assembler.toModel(producto);
     }
 
-    @PutMapping("/{id}")
-    ResponseEntity<?> replaceEmployee(@RequestBody Producto nuevoProducto, @PathVariable ProductoId id) {
-        Producto productoActualizado = repository.findById(id)
-                .map(employee -> {
-                    employee.setNombre(nuevoProducto.getNombre());
-//                    employee.setTelf(nuevoProducto.getTelf());
-//                    employee.setDireccion(nuevoProducto.getDireccion());
-//                    employee.setId_adm_comercio(nuevoProducto.getId_adm_comercio());
-                    return repository.save(employee);
+    @PutMapping("/{id_comercio}/{codigo}")
+    ResponseEntity<?> replaceEmployee(@RequestBody Producto nuevoProducto, @PathVariable Long id_comercio, @PathVariable String codigo) {
+        ProductoId productoId = new ProductoId(id_comercio, codigo);
+        Producto productoActualizado = repository.findById(productoId)
+                .map(producto -> {
+                    producto.setNombre(nuevoProducto.getNombre());
+                    producto.setDescripcion(nuevoProducto.getDescripcion());
+                    return repository.save(producto);
                 })
                 .orElseGet(() -> {
-                    nuevoProducto.setProductoId(id);
+                    nuevoProducto.setId_comercio(id_comercio);
+                    nuevoProducto.setCodigo(codigo);
                     return repository.save(nuevoProducto);
                 });
         EntityModel<Producto> entityModel = assembler.toModel(productoActualizado);
@@ -75,9 +76,10 @@ public class ProductoController {
                 .body(entityModel);
     }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteEmployee(@PathVariable ProductoId id) {
-        repository.deleteById(id);
+    @DeleteMapping("/{id_comercio}/{codigo}")
+    ResponseEntity<?> deleteEmployee(@PathVariable Long id_comercio, @PathVariable String codigo) {
+        ProductoId productoId = new ProductoId(id_comercio, codigo);
+        repository.deleteById(productoId);
         return ResponseEntity.noContent().build();
     }
 }
