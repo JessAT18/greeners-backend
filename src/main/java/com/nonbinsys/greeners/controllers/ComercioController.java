@@ -54,20 +54,20 @@ public class ComercioController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<?> replaceEmployee(@RequestBody Comercio nuevoComercio, @PathVariable Long id) {
-        Comercio updatedEmployee = repository.findById(id)
-                .map(employee -> {
-                    employee.setNombre(nuevoComercio.getNombre());
-                    employee.setTelf(nuevoComercio.getTelf());
-                    employee.setDireccion(nuevoComercio.getDireccion());
-                    employee.setId_adm_comercio(nuevoComercio.getId_adm_comercio());
-                    return repository.save(employee);
+    ResponseEntity<?> replaceComercio(@RequestBody Comercio nuevoComercio, @PathVariable Long id) {
+        Comercio comercioActualizado = repository.findById(id)
+                .map(comercio -> {
+                    comercio.setNombre(nuevoComercio.getNombre());
+                    comercio.setTelf(nuevoComercio.getTelf());
+                    comercio.setDireccion(nuevoComercio.getDireccion());
+                    comercio.setId_adm_comercio(nuevoComercio.getId_adm_comercio());
+                    return repository.save(comercio);
                 })
                 .orElseGet(() -> {
                     nuevoComercio.setId(id);
                     return repository.save(nuevoComercio);
                 });
-        EntityModel<Comercio> entityModel = assembler.toModel(updatedEmployee);
+        EntityModel<Comercio> entityModel = assembler.toModel(comercioActualizado);
 
         return ResponseEntity
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -75,7 +75,7 @@ public class ComercioController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+    ResponseEntity<?> deleteComercio(@PathVariable Long id) {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }

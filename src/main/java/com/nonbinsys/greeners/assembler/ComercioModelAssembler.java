@@ -16,7 +16,7 @@ public class ComercioModelAssembler implements RepresentationModelAssembler<Come
     public EntityModel<Comercio> toModel(Comercio comercio) {
         return EntityModel.of(comercio, //
                 linkTo(methodOn(ComercioController.class).one(comercio.getId())).withSelfRel(),
-                linkTo(methodOn(ComercioController.class).all()).withRel("employees"));
+                linkTo(methodOn(ComercioController.class).all()).withRel("comercios"));
     }
 
     @Override
