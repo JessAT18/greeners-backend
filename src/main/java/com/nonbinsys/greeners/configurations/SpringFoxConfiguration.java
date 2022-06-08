@@ -15,7 +15,7 @@ public class SpringFoxConfiguration {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.nonbinsys.greeners.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.nonbinsys.greeners"))
                 .paths(PathSelectors.any())
                 .build()
                 //.apiInfo(apiInfo())
