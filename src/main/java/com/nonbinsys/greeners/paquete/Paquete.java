@@ -3,7 +3,7 @@ package com.nonbinsys.greeners.paquete;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Table(name = "descripcion_paquetes")
+@Table(name = "paquetes")
 @Entity
 public class Paquete {
     @Id
