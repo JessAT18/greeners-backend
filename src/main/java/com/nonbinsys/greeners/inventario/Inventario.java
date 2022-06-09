@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "paquetes")
-public class Paquete {
+public class Inventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,10 +17,10 @@ public class Paquete {
     private Long id_comercio;
     private Long id_descripcion_paquete;
 
-    public Paquete() {
+    public Inventario() {
     }
 
-    public Paquete(Long id, String codigo, BigDecimal precio, Long stock, Long id_comercio, Long id_descripcion_paquete) {
+    public Inventario(Long id, String codigo, BigDecimal precio, Long stock, Long id_comercio, Long id_descripcion_paquete) {
         this.id = id;
         this.codigo = codigo;
         this.precio = precio;
@@ -81,8 +81,8 @@ public class Paquete {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Paquete paquete = (Paquete) o;
-        return Objects.equals(id, paquete.id) && Objects.equals(codigo, paquete.codigo) && Objects.equals(precio, paquete.precio) && Objects.equals(stock, paquete.stock) && Objects.equals(id_comercio, paquete.id_comercio) && Objects.equals(id_descripcion_paquete, paquete.id_descripcion_paquete);
+        Inventario inventario = (Inventario) o;
+        return Objects.equals(id, inventario.id) && Objects.equals(codigo, inventario.codigo) && Objects.equals(precio, inventario.precio) && Objects.equals(stock, inventario.stock) && Objects.equals(id_comercio, inventario.id_comercio) && Objects.equals(id_descripcion_paquete, inventario.id_descripcion_paquete);
     }
 
     @Override

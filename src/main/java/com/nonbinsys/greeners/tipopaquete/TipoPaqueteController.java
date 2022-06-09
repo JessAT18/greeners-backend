@@ -36,9 +36,9 @@ public class TipoPaqueteController {
 
     @GetMapping("/{id}")
     public EntityModel<TipoPaquete> one(@PathVariable Long id) {
-        TipoPaquete paquete = repository.findById(id)
+        TipoPaquete inventario = repository.findById(id)
                 .orElseThrow(() -> new TipoPaqueteRepository.TipoPaqueteNotFoundException(id));
 
-        return assembler.toModel(paquete);
+        return assembler.toModel(inventario);
     }
 }

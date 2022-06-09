@@ -5,7 +5,7 @@ import java.util.Objects;
 
 @Table(name = "descripcion_paquetes")
 @Entity
-public class DescripcionPaquete {
+public class Paquete {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,10 +14,10 @@ public class DescripcionPaquete {
 
     private Long id_tipo_paquete;
 
-    public DescripcionPaquete() {
+    public Paquete() {
     }
 
-    public DescripcionPaquete(Long id, String nombre, String descripcion, Long id_tipo_paquete) {
+    public Paquete(Long id, String nombre, String descripcion, Long id_tipo_paquete) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -60,7 +60,7 @@ public class DescripcionPaquete {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DescripcionPaquete that = (DescripcionPaquete) o;
+        Paquete that = (Paquete) o;
         return Objects.equals(id, that.id) && Objects.equals(nombre, that.nombre) && Objects.equals(descripcion, that.descripcion) && Objects.equals(id_tipo_paquete, that.id_tipo_paquete);
     }
 
