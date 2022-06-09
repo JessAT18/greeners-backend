@@ -1,5 +1,6 @@
 package com.nonbinsys.greeners.comercio;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -77,4 +78,14 @@ public class ComercioController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/encontrarComerciosPorNombre/{nombre}")
+    public CollectionModel<EntityModel<Comercio>> encontrarComerciosPorNombre(@PathVariable("nombre") String nombreComercio) {
+        List<EntityModel<Comercio>> comercios = repository.encontrarComerciosPorNombre(nombreComercio).stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
+
+        // TODO: 6/8/2022 IMPLEMENTAR EXCEPCIONES
+
+        return CollectionModel.of(comercios, linkTo(methodOn(ComercioController.class).all()).withSelfRel());
+    }
 }

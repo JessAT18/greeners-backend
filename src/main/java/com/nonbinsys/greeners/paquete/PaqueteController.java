@@ -14,7 +14,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
-@RequestMapping("/api/paquetes/descripcionpaquete")
+@RequestMapping("/api/paquetes")
 public class PaqueteController {
     private final PaqueteRepository repository;
     private final PaqueteModelAssembler assembler;

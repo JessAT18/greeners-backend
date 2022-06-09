@@ -11,16 +11,18 @@ public class Paquete {
     private Long id;
     private String nombre;
     private String descripcion;
+    private String link_paquete;
 
     private Long id_tipo_paquete;
 
     public Paquete() {
     }
 
-    public Paquete(Long id, String nombre, String descripcion, Long id_tipo_paquete) {
+    public Paquete(Long id, String nombre, String descripcion, String link_paquete, Long id_tipo_paquete) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.link_paquete = link_paquete;
         this.id_tipo_paquete = id_tipo_paquete;
     }
 
@@ -48,6 +50,14 @@ public class Paquete {
         this.descripcion = descripcion;
     }
 
+    public String getLink_paquete() {
+        return link_paquete;
+    }
+
+    public void setLink_paquete(String link_paquete) {
+        this.link_paquete = link_paquete;
+    }
+
     public Long getId_tipo_paquete() {
         return id_tipo_paquete;
     }
@@ -60,21 +70,22 @@ public class Paquete {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Paquete that = (Paquete) o;
-        return Objects.equals(id, that.id) && Objects.equals(nombre, that.nombre) && Objects.equals(descripcion, that.descripcion) && Objects.equals(id_tipo_paquete, that.id_tipo_paquete);
+        Paquete paquete = (Paquete) o;
+        return Objects.equals(id, paquete.id) && Objects.equals(nombre, paquete.nombre) && Objects.equals(descripcion, paquete.descripcion) && Objects.equals(link_paquete, paquete.link_paquete) && Objects.equals(id_tipo_paquete, paquete.id_tipo_paquete);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, descripcion, id_tipo_paquete);
+        return Objects.hash(id, nombre, descripcion, link_paquete, id_tipo_paquete);
     }
 
     @Override
     public String toString() {
-        return "DescripcionPaquete{" +
+        return "Paquete{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
+                ", link_paquete='" + link_paquete + '\'' +
                 ", id_tipo_paquete=" + id_tipo_paquete +
                 '}';
     }
