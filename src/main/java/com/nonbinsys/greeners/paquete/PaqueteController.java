@@ -24,7 +24,7 @@ public class PaqueteController {
         this.assembler = assembler;
     }
 
-    @GetMapping("/listarDescripcionPaquetes")
+    @GetMapping("/listarPaquetes")
     public CollectionModel<EntityModel<Paquete>> all() {
         List<EntityModel<Paquete>> descripcionesPaquetes = repository.findAll().stream()
                 .map(assembler::toModel)
@@ -33,9 +33,9 @@ public class PaqueteController {
         return CollectionModel.of(descripcionesPaquetes, linkTo(methodOn(PaqueteController.class).all()).withSelfRel());
     }
 
-    @PostMapping("/crearNuevoComercio")
-    ResponseEntity<?> nuevaDescripcionPaquete (@RequestBody Paquete nuevoComercio) {
-        EntityModel<Paquete> entityModel = assembler.toModel(repository.save(nuevoComercio));
+    @PostMapping("/crearNuevoPaquete")
+    ResponseEntity<?> nuevoPaquete (@RequestBody Paquete nuevoPaquete) {
+        EntityModel<Paquete> entityModel = assembler.toModel(repository.save(nuevoPaquete));
 
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -51,17 +51,17 @@ public class PaqueteController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<?> replaceDescripcionPaquete(@RequestBody Paquete nuevaPaquete, @PathVariable Long id) {
+    ResponseEntity<?> replacePaquete(@RequestBody Paquete nuevoPaquete, @PathVariable Long id) {
         Paquete paqueteActualizado = repository.findById(id)
                 .map(paquete -> {
-                    paquete.setNombre(nuevaPaquete.getNombre());
-                    paquete.setDescripcion(nuevaPaquete.getDescripcion());
-                    paquete.setId_tipo_paquete(nuevaPaquete.getId_tipo_paquete());
+                    paquete.setNombre(nuevoPaquete.getNombre());
+                    paquete.setDescripcion(nuevoPaquete.getDescripcion());
+                    paquete.setId_tipo_paquete(nuevoPaquete.getId_tipo_paquete());
                     return repository.save(paquete);
                 })
                 .orElseGet(() -> {
-                    nuevaPaquete.setId(id);
-                    return repository.save(nuevaPaquete);
+                    nuevoPaquete.setId(id);
+                    return repository.save(nuevoPaquete);
                 });
         EntityModel<Paquete> entityModel = assembler.toModel(paqueteActualizado);
 
@@ -71,7 +71,7 @@ public class PaqueteController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteDescripcionPaquete(@PathVariable Long id) {
+    ResponseEntity<?> deletePaquete(@PathVariable Long id) {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
