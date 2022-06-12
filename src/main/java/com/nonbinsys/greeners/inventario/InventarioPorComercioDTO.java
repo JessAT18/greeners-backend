@@ -10,6 +10,15 @@ public class InventarioPorComercioDTO {
     private String descripcion;
     private String link_paquete;
 
+    public InventarioPorComercioDTO(Long id, String codigo, BigDecimal precio, String nombre, String descripcion, String link_paquete) {
+        this.id = id;
+        this.codigo = codigo;
+        this.precio = precio;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.link_paquete = link_paquete;
+    }
+
     public Long getId() {
         return id;
     }
