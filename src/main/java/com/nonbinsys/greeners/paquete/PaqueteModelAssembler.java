@@ -14,7 +14,7 @@ public class PaqueteModelAssembler implements RepresentationModelAssembler<Paque
     public EntityModel<Paquete> toModel(Paquete paquete) {
         return EntityModel.of(paquete,
                 linkTo(methodOn(PaqueteController.class).one(paquete.getId())).withSelfRel(),
-                linkTo(methodOn(PaqueteController.class).all()).withRel("descripcionpaquetes")
+                linkTo(methodOn(PaqueteController.class).all()).withRel("paquetes")
                 );
     }
 
