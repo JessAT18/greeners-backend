@@ -1,5 +1,6 @@
 package com.nonbinsys.greeners.comercio;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -17,17 +18,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/comercios")
 public class ComercioController {
-    private final ComercioRepository repository;
+    @Autowired
+    private IComercioService iComercioService;
     private final ComercioModelAssembler assembler;
 
-    ComercioController(ComercioRepository repository, ComercioModelAssembler assembler) {
-        this.repository = repository;
+    ComercioController(ComercioModelAssembler assembler) {
         this.assembler = assembler;
     }
 
     @GetMapping("/listarComercios")
     public CollectionModel<EntityModel<Comercio>> all() {
-        List<EntityModel<Comercio>> comercios = repository.findAll().stream()
+        List<EntityModel<Comercio>> comercios = iComercioService.listarComercios().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
@@ -36,7 +37,7 @@ public class ComercioController {
 
     @PostMapping("/crearNuevoComercio")
     ResponseEntity<?> nuevoComercio (@RequestBody Comercio nuevoComercio) {
-        EntityModel<Comercio> entityModel = assembler.toModel(repository.save(nuevoComercio));
+        EntityModel<Comercio> entityModel = assembler.toModel(iComercioService.guardarComercio(nuevoComercio));
 
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -45,25 +46,24 @@ public class ComercioController {
 
     @GetMapping("/{id}")
     public EntityModel<Comercio> one(@PathVariable Long id) {
-        Comercio comercio = repository.findById(id)
+        Comercio comercio = iComercioService.unComercio(id)
                 .orElseThrow(() -> new ComercioNotFoundException(id));
-
         return assembler.toModel(comercio);
     }
 
     @PutMapping("/{id}")
     ResponseEntity<?> replaceComercio(@RequestBody Comercio nuevoComercio, @PathVariable Long id) {
-        Comercio comercioActualizado = repository.findById(id)
+        Comercio comercioActualizado = iComercioService.unComercio(id)
                 .map(comercio -> {
                     comercio.setNombre(nuevoComercio.getNombre());
                     comercio.setTelf(nuevoComercio.getTelf());
                     comercio.setDireccion(nuevoComercio.getDireccion());
                     comercio.setId_adm_comercio(nuevoComercio.getId_adm_comercio());
-                    return repository.save(comercio);
+                    return iComercioService.guardarComercio(comercio);
                 })
                 .orElseGet(() -> {
                     nuevoComercio.setId(id);
-                    return repository.save(nuevoComercio);
+                    return iComercioService.guardarComercio(nuevoComercio);
                 });
         EntityModel<Comercio> entityModel = assembler.toModel(comercioActualizado);
 
@@ -74,13 +74,13 @@ public class ComercioController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteComercio(@PathVariable Long id) {
-        repository.deleteById(id);
+        iComercioService.eliminarComercio(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/encontrarComerciosPorNombre/{nombre}")
     public CollectionModel<EntityModel<Comercio>> encontrarComerciosPorNombre(@PathVariable("nombre") String nombreComercio) {
-        List<EntityModel<Comercio>> comercios = repository.encontrarComerciosPorNombre(nombreComercio).stream()
+        List<EntityModel<Comercio>> comercios = iComercioService.encontrarComerciosPorNombre(nombreComercio).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 

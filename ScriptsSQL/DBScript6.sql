@@ -305,6 +305,8 @@ CREATE TABLE lineas_de_pedido(
 #    WHERE inventarios.id_comercio=1 AND fecha >= CURDATE()
 #    ORDER BY fecha DESC;
 
+SELECT * FROM paquetes WHERE id_comercio = 1;
+
 SELECT paquetes.id, inventarios.codigo, inventarios.precio, paquetes.nombre, paquetes.descripcion, paquetes.link_paquete FROM inventarios
 	LEFT JOIN paquetes ON inventarios.id_paquete = paquetes.id
     WHERE inventarios.id_comercio=1
@@ -314,5 +316,3 @@ SELECT * FROM inventarios
 	LEFT JOIN paquetes ON inventarios.id_paquete = paquetes.id
     WHERE inventarios.id_comercio=1
     ORDER BY fecha DESC;
-    
-SELECT * FROM paquetes;
