@@ -58,7 +58,8 @@ public class PaqueteController {
         Paquete nuevoPaquete = new Paquete();
         nuevoPaquete.setNombre(nuevo.getNombre());
         nuevoPaquete.setDescripcion(nuevo.getDescripcion());
-        nuevoPaquete.setLink_paquete(nuevo.getLink_paquete());
+        //nuevoPaquete.setLink_paquete(nuevo.getLink_paquete());
+        nuevoPaquete.setLink_paquete("https://i.imgur.com/i2Pyx6A.png");
         nuevoPaquete.setHabilitado(nuevo.getHabilitado());
         nuevoPaquete.setId_tipo_paquete(nuevo.getId_tipo_paquete());
         nuevoPaquete.setId_comercio(nuevo.getId_comercio());
