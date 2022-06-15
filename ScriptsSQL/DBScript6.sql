@@ -90,7 +90,6 @@ CREATE TABLE usuarios(
     FOREIGN KEY(id_rol) REFERENCES roles(id)
 );
 
-
 INSERT INTO usuarios(nombre_usuario, contra_usuario, id_persona, id_rol)
 	VALUES
     ("JessAT18", "Passw0rd", 1, 1),
@@ -211,7 +210,10 @@ INSERT INTO paquetes(nombre, descripcion, id_tipo_paquete, id_comercio)
     ("Papitas fritas Mistery", "Papitas fritas :D", 1, 1),
     ("Trio de bowls sorpresa", "Tres bowls M a eleccion", 1, 2),
     ("Panetones random", "Dos panetones de sabor variado", 2, 3),
-    ("Papitas fritas Americanas", "Papitas fritas mmm", 1, 1);
+    ("Papitas fritas Americanas", "Papitas fritas mmm", 1, 1),
+    ("Paquete prueba 3", "Papitas fritas Descripcion 1", 1, 1),
+    ("Paquete prueba 4", "Este es un paquete :D", 1, 1),
+    ("Paquete prueba 5", "Contiene muchas sorpresas", 1, 1);
 
 
 CREATE TABLE inventarios(
@@ -234,7 +236,11 @@ INSERT INTO inventarios(codigo, fecha, precio, stock, id_comercio, id_paquete)
 	VALUES
     ("1", "2022-06-10 12:00:00", 75, 20, 1, 1),
     ("1", "2022-06-10 12:00:00", 60, 30, 2, 2),
-    ("1", "2022-06-10 12:00:00", 30, 10, 3, 3);
+    ("1", "2022-06-10 12:00:00", 30, 10, 3, 3),
+    ("2", "2022-06-10 12:00:00", 40, 10, 1, 4),
+    ("3", "2022-06-10 12:00:00", 40, 10, 1, 5),
+    ("4", "2022-06-10 12:00:00", 30, 10, 1, 6),
+    ("5", "2022-06-10 12:00:00", 20, 10, 1, 7);
 
 CREATE TABLE metodos_de_pago(
 	id INT AUTO_INCREMENT,
@@ -305,14 +311,14 @@ CREATE TABLE lineas_de_pedido(
 #    WHERE inventarios.id_comercio=1 AND fecha >= CURDATE()
 #    ORDER BY fecha DESC;
 
-SELECT * FROM paquetes WHERE id_comercio = 1;
+#SELECT * FROM paquetes WHERE id_comercio = 1;
 
-SELECT paquetes.id, inventarios.codigo, inventarios.precio, paquetes.nombre, paquetes.descripcion, paquetes.link_paquete FROM inventarios
-	LEFT JOIN paquetes ON inventarios.id_paquete = paquetes.id
-    WHERE inventarios.id_comercio=1
-    ORDER BY fecha DESC;
+#SELECT paquetes.id, inventarios.codigo, inventarios.precio, paquetes.nombre, paquetes.descripcion, paquetes.link_paquete FROM inventarios
+	#LEFT JOIN paquetes ON inventarios.id_paquete = paquetes.id
+    #WHERE inventarios.id_comercio=1
+    #ORDER BY fecha DESC;
     
-SELECT * FROM inventarios
-	LEFT JOIN paquetes ON inventarios.id_paquete = paquetes.id
-    WHERE inventarios.id_comercio=1
-    ORDER BY fecha DESC;
+#SELECT * FROM inventarios
+	#LEFT JOIN paquetes ON inventarios.id_paquete = paquetes.id
+    #WHERE inventarios.id_comercio=1
+    #ORDER BY fecha DESC;
