@@ -1,9 +1,10 @@
 package com.nonbinsys.greeners.paquete;
 
+import com.nonbinsys.greeners.inventario.IInventarioService;
 import com.nonbinsys.greeners.inventario.Inventario;
-import com.nonbinsys.greeners.inventario.InventarioController;
 import com.nonbinsys.greeners.inventario.InventarioModelAssembler;
 import com.nonbinsys.greeners.inventario.InventarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -20,31 +21,31 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/paquetes")
 public class PaqueteController {
-    private final PaqueteRepository repository;
+    @Autowired
+    private IPaqueteService iPaqueteService;
     private final PaqueteModelAssembler assembler;
-    private final InventarioRepository inventarioRepository;
+    @Autowired
+    private IInventarioService iInventarioService;
     private final InventarioModelAssembler inventarioAssembler;
 
-    public PaqueteController(PaqueteRepository repository, PaqueteModelAssembler assembler, InventarioRepository inventarioRepository, InventarioModelAssembler inventarioAssembler) {
-        this.repository = repository;
+    public PaqueteController(PaqueteModelAssembler assembler, InventarioModelAssembler inventarioAssembler) {
         this.assembler = assembler;
-        this.inventarioRepository = inventarioRepository;
         this.inventarioAssembler = inventarioAssembler;
     }
 
     @GetMapping("/listarPaquetes")
-    public CollectionModel<EntityModel<Paquete>> all() {
-        List<EntityModel<Paquete>> descripcionesPaquetes = repository.findAll().stream()
+    public CollectionModel<EntityModel<Paquete>> listarPaquetes() {
+        List<EntityModel<Paquete>> descripcionesPaquetes = iPaqueteService.listarPaquetes().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(descripcionesPaquetes, linkTo(methodOn(PaqueteController.class).all()).withSelfRel());
+        return CollectionModel.of(descripcionesPaquetes, linkTo(methodOn(PaqueteController.class).listarPaquetes()).withSelfRel());
     }
 
 
     @GetMapping("/encontrarPaquetesPorComercio/{id_comercio}")
     public CollectionModel<EntityModel<Paquete>> encontrarPaquetesPorComercio(@PathVariable Long id_comercio) {
-        List<EntityModel<Paquete>> descripcionesPaquetes = repository.encontrarPaquetesPorComercio(id_comercio).stream()
+        List<EntityModel<Paquete>> descripcionesPaquetes = iPaqueteService.encontrarPaquetesPorComercio(id_comercio).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
@@ -64,7 +65,7 @@ public class PaqueteController {
         nuevoPaquete.setId_tipo_paquete(nuevo.getId_tipo_paquete());
         nuevoPaquete.setId_comercio(nuevo.getId_comercio());
 
-        EntityModel<Paquete> entityModel = assembler.toModel(repository.save(nuevoPaquete));
+        EntityModel<Paquete> entityModel = assembler.toModel(iPaqueteService.guardarPaquete(nuevoPaquete));
         if (nuevoPaquete.getHabilitado() == false) {
             return ResponseEntity //
                     .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -82,7 +83,7 @@ public class PaqueteController {
             nuevoInventario.setId_comercio(nuevo.getId_comercio());
             nuevoInventario.setId_paquete(id_paquete);
 
-            EntityModel<Inventario> inventarioEntityModel = inventarioAssembler.toModel(inventarioRepository.save(nuevoInventario));
+            EntityModel<Inventario> inventarioEntityModel = inventarioAssembler.toModel(iInventarioService.guardarInventario(nuevoInventario));
 
             return ResponseEntity
                     .created(inventarioEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -91,8 +92,8 @@ public class PaqueteController {
     }
 
     @GetMapping("/{id}")
-    public EntityModel<Paquete> one(@PathVariable Long id) {
-        Paquete paquete = repository.findById(id)
+    public EntityModel<Paquete> unPaquete(@PathVariable Long id) {
+        Paquete paquete = iPaqueteService.unPaquete(id)
                 .orElseThrow(() -> new PaqueteNotFoundException(id));
 
         return assembler.toModel(paquete);
@@ -100,7 +101,7 @@ public class PaqueteController {
 
     @PutMapping("/{id}")
     ResponseEntity<?> replacePaquete(@RequestBody Paquete nuevoPaquete, @PathVariable Long id) {
-        Paquete paqueteActualizado = repository.findById(id)
+        Paquete paqueteActualizado = iPaqueteService.unPaquete(id)
                 .map(paquete -> {
                     paquete.setNombre(nuevoPaquete.getNombre());
                     paquete.setDescripcion(nuevoPaquete.getDescripcion());
@@ -119,11 +120,11 @@ public class PaqueteController {
                         paquete.setHabilitado(nuevoPaquete.getHabilitado());
                     }
                     paquete.setId_tipo_paquete(nuevoPaquete.getId_tipo_paquete());
-                    return repository.save(paquete);
+                    return iPaqueteService.guardarPaquete(paquete);
                 })
                 .orElseGet(() -> {
                     nuevoPaquete.setId(id);
-                    return repository.save(nuevoPaquete);
+                    return iPaqueteService.guardarPaquete(nuevoPaquete);
                 });
         EntityModel<Paquete> entityModel = assembler.toModel(paqueteActualizado);
 
@@ -133,8 +134,8 @@ public class PaqueteController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deletePaquete(@PathVariable Long id) {
-        repository.deleteById(id);
+    ResponseEntity<?> eliminarPaquete(@PathVariable Long id) {
+        iPaqueteService.eliminarPaquete(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -14,8 +14,8 @@ public class InventarioModelAssembler implements RepresentationModelAssembler<In
     @Override
     public EntityModel<Inventario> toModel(Inventario inventario) {
         return EntityModel.of(inventario,
-                linkTo(methodOn(InventarioController.class).one(inventario.getId())).withSelfRel(),
-                linkTo(methodOn(InventarioController.class).all()).withRel("inventarios"));
+                linkTo(methodOn(InventarioController.class).unInventario(inventario.getId())).withSelfRel(),
+                linkTo(methodOn(InventarioController.class).listarInventarios()).withRel("inventarios"));
     }
 
     @Override

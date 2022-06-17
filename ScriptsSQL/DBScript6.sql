@@ -207,7 +207,7 @@ CREATE TABLE paquetes(
 #INSERTAR IMAGENES CUANDO TENGA TIEMPO xD
 INSERT INTO paquetes(nombre, descripcion, id_tipo_paquete, id_comercio)
 	VALUES
-    ("Papitas fritas Mistery", "Papitas fritas :D", 1, 1),
+    ("Papitas fritas sorpresas", "Papitas fritas :D", 1, 1),
     ("Trio de bowls sorpresa", "Tres bowls M a eleccion", 1, 2),
     ("Panetones random", "Dos panetones de sabor variado", 2, 3),
     ("Papitas fritas Americanas", "Papitas fritas mmm", 1, 1),

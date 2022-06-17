@@ -1,7 +1,5 @@
 package com.nonbinsys.greeners.comercio;
 
-import com.nonbinsys.greeners.comercio.ComercioController;
-import com.nonbinsys.greeners.comercio.Comercio;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -15,8 +13,8 @@ public class ComercioModelAssembler implements RepresentationModelAssembler<Come
     @Override
     public EntityModel<Comercio> toModel(Comercio comercio) {
         return EntityModel.of(comercio, //
-                linkTo(methodOn(ComercioController.class).one(comercio.getId())).withSelfRel(),
-                linkTo(methodOn(ComercioController.class).all()).withRel("comercios"));
+                linkTo(methodOn(ComercioController.class).unComercio(comercio.getId())).withSelfRel(),
+                linkTo(methodOn(ComercioController.class).listarComercios()).withRel("comercios"));
     }
 
     @Override

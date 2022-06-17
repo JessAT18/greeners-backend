@@ -13,8 +13,8 @@ public class TipoPaqueteModelAssembler implements RepresentationModelAssembler<T
     @Override
     public EntityModel<TipoPaquete> toModel(TipoPaquete tipoPaquete) {
         return EntityModel.of(tipoPaquete, //
-                linkTo(methodOn(TipoPaqueteController.class).one(tipoPaquete.getId())).withSelfRel(),
-                linkTo(methodOn(TipoPaqueteController.class).all()).withRel("tipospaquete"));
+                linkTo(methodOn(TipoPaqueteController.class).unTipoPaquete(tipoPaquete.getId())).withSelfRel(),
+                linkTo(methodOn(TipoPaqueteController.class).listarTiposPaquete()).withRel("tipospaquete"));
     }
 
     @Override

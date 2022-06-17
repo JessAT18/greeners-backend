@@ -2,6 +2,7 @@ package com.nonbinsys.greeners.producto;
 
 import com.nonbinsys.greeners.producto.entity.Producto;
 import com.nonbinsys.greeners.producto.entity.ProductoId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -15,28 +16,29 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/api/productos")
 public class ProductoController {
-    private final ProductoRepository repository;
+    @Autowired
+    private IProductoService iProductoService;
     private final ProductoModelAssembler assembler;
 
-    ProductoController(ProductoRepository repository, ProductoModelAssembler assembler) {
-        this.repository = repository;
+    ProductoController(ProductoModelAssembler assembler) {
         this.assembler = assembler;
     }
 
     @GetMapping("/listarProductos")
-    public CollectionModel<EntityModel<Producto>> all() {
-        List<EntityModel<Producto>> productos = repository.findAll().stream()
+    public CollectionModel<EntityModel<Producto>> listarProductos() {
+        List<EntityModel<Producto>> productos = iProductoService.listarProductos().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(productos, linkTo(methodOn(ProductoController.class).all()).withSelfRel());
+        return CollectionModel.of(productos, linkTo(methodOn(ProductoController.class).listarProductos()).withSelfRel());
     }
 
     @PostMapping("/crearNuevoProducto")
-    ResponseEntity<?> nuevoComercio (@RequestBody Producto nuevoProducto) {
-        EntityModel<Producto> entityModel = assembler.toModel(repository.save(nuevoProducto));
+    ResponseEntity<?> nuevoProducto (@RequestBody Producto nuevoProducto) {
+        EntityModel<Producto> entityModel = assembler.toModel(iProductoService.guardarProducto(nuevoProducto));
 
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
@@ -44,9 +46,9 @@ public class ProductoController {
     }
 
     @GetMapping("/{id_comercio}/{codigo}")
-    public EntityModel<Producto> one(@PathVariable Long id_comercio, @PathVariable String codigo) {
+    public EntityModel<Producto> unProducto(@PathVariable Long id_comercio, @PathVariable String codigo) {
         ProductoId productoId = new ProductoId(id_comercio, codigo);
-        Producto producto = repository.findById(productoId)
+        Producto producto = iProductoService.unProducto(productoId)
                 .orElseThrow(() -> new ProductoNotFoundException(productoId));
 
         return assembler.toModel(producto);
@@ -55,16 +57,16 @@ public class ProductoController {
     @PutMapping("/{id_comercio}/{codigo}")
     ResponseEntity<?> replaceEmployee(@RequestBody Producto nuevoProducto, @PathVariable Long id_comercio, @PathVariable String codigo) {
         ProductoId productoId = new ProductoId(id_comercio, codigo);
-        Producto productoActualizado = repository.findById(productoId)
+        Producto productoActualizado = iProductoService.unProducto(productoId)
                 .map(producto -> {
                     producto.setNombre(nuevoProducto.getNombre());
                     producto.setDescripcion(nuevoProducto.getDescripcion());
-                    return repository.save(producto);
+                    return iProductoService.guardarProducto(producto);
                 })
                 .orElseGet(() -> {
                     nuevoProducto.setId_comercio(id_comercio);
                     nuevoProducto.setCodigo(codigo);
-                    return repository.save(nuevoProducto);
+                    return iProductoService.guardarProducto(nuevoProducto);
                 });
         EntityModel<Producto> entityModel = assembler.toModel(productoActualizado);
 
@@ -76,7 +78,7 @@ public class ProductoController {
     @DeleteMapping("/{id_comercio}/{codigo}")
     ResponseEntity<?> deleteEmployee(@PathVariable Long id_comercio, @PathVariable String codigo) {
         ProductoId productoId = new ProductoId(id_comercio, codigo);
-        repository.deleteById(productoId);
+        iProductoService.eliminarProducto(productoId);
         return ResponseEntity.noContent().build();
     }
 }

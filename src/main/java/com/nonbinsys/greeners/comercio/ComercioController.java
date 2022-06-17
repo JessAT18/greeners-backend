@@ -1,7 +1,6 @@
 package com.nonbinsys.greeners.comercio;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -27,12 +26,12 @@ public class ComercioController {
     }
 
     @GetMapping("/listarComercios")
-    public CollectionModel<EntityModel<Comercio>> all() {
+    public CollectionModel<EntityModel<Comercio>> listarComercios() {
         List<EntityModel<Comercio>> comercios = iComercioService.listarComercios().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(comercios, linkTo(methodOn(ComercioController.class).all()).withSelfRel());
+        return CollectionModel.of(comercios, linkTo(methodOn(ComercioController.class).listarComercios()).withSelfRel());
     }
 
     @PostMapping("/crearNuevoComercio")
@@ -45,7 +44,7 @@ public class ComercioController {
     }
 
     @GetMapping("/{id}")
-    public EntityModel<Comercio> one(@PathVariable Long id) {
+    public EntityModel<Comercio> unComercio(@PathVariable Long id) {
         Comercio comercio = iComercioService.unComercio(id)
                 .orElseThrow(() -> new ComercioNotFoundException(id));
         return assembler.toModel(comercio);
@@ -73,7 +72,7 @@ public class ComercioController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteComercio(@PathVariable Long id) {
+    ResponseEntity<?> eliminarComercio(@PathVariable Long id) {
         iComercioService.eliminarComercio(id);
         return ResponseEntity.noContent().build();
     }
@@ -86,6 +85,6 @@ public class ComercioController {
 
         // TODO: 6/8/2022 IMPLEMENTAR EXCEPCIONES
 
-        return CollectionModel.of(comercios, linkTo(methodOn(ComercioController.class).all()).withSelfRel());
+        return CollectionModel.of(comercios, linkTo(methodOn(ComercioController.class).listarComercios()).withSelfRel());
     }
 }
