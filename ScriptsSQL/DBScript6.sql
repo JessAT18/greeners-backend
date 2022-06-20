@@ -294,14 +294,15 @@ CREATE TABLE pedidos(
 );
 
 CREATE TABLE lineas_de_pedido(	
-	id INT AUTO_INCREMENT,
-    cod_paquete VARCHAR(100) NOT NULL,
-    cant INT NOT NULL,
-    
     id_pedido INT,
     id_inventario INT,
     
-    PRIMARY KEY(id),
+    
+    cod_paquete VARCHAR(100) NOT NULL,
+    cant INT NOT NULL,
+    
+    
+    PRIMARY KEY(id_pedido, id_inventario),
     FOREIGN KEY(id_pedido) REFERENCES pedidos(id),
     FOREIGN KEY(id_inventario) REFERENCES inventarios(id)
 );
